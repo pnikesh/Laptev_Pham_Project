@@ -10,8 +10,7 @@ using Microsoft.AspNetCore.Cors;
 
 namespace Laptev_Pham_Project.Controllers
 {
-    [EnableCors()]
-
+   
     [Route("api/[controller]")]
     [ApiController]
     public class FlightsController : ControllerBase
