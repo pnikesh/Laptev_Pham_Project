@@ -27,7 +27,7 @@ namespace Laptev_Pham_Project
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            // IMPORTANT! Adding CORS policy service. Before AddMvc!
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll",
@@ -46,8 +46,8 @@ namespace Laptev_Pham_Project
             services.AddDbContext<FlightsDBContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("FlightsDBContext")));
 
-            
 
+            // IMPORTANT! Adding SWAGGER service
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new Info
@@ -74,10 +74,12 @@ namespace Laptev_Pham_Project
 
             app.UseHttpsRedirection();
 
+            // IMPORTANT! Configuring CORS policy service. Before UseMvc!
             app.UseCors("AllowAll");
 
             app.UseMvc();
 
+            // IMPORTANT! Configuring SWAGGER service
             app.UseSwagger();
 
             app.UseSwaggerUI(options =>
