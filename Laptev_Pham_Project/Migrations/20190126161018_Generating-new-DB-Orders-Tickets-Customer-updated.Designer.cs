@@ -3,14 +3,16 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Laptev_Pham_Project.Migrations
 {
     [DbContext(typeof(FlightsDBContext))]
-    partial class FlightsDBContextModelSnapshot : ModelSnapshot
+    [Migration("20190126161018_Generating-new-DB-Orders-Tickets-Customer-updated")]
+    partial class GeneratingnewDBOrdersTicketsCustomerupdated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

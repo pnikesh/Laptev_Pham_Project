@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Laptev_Pham_Project.Models
 {
+    
     public class Flight
     {
         public int ID { get; set; }

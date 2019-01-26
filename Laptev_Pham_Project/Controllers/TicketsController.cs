@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Laptev_Pham_Project.Models;
 
 namespace Laptev_Pham_Project.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    public class TicketsController : ControllerBase
+    public class TicketsController : Controller
     {
         private readonly FlightsDBContext _context;
 
@@ -20,101 +19,130 @@ namespace Laptev_Pham_Project.Controllers
             _context = context;
         }
 
-        // GET: api/Tickets
-        [HttpGet]
-        public IEnumerable<Ticket> GetTicket()
+        // GET: Tickets
+        public async Task<IActionResult> Index()
         {
-            return _context.Ticket;
+            return View(await _context.Ticket.ToListAsync());
         }
 
-        // GET: api/Tickets/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetTicket([FromRoute] int id)
+        // GET: Tickets/Details/5
+        public async Task<IActionResult> Details(int? id)
         {
-            if (!ModelState.IsValid)
+            if (id == null)
             {
-                return BadRequest(ModelState);
+                return NotFound();
             }
 
-            var ticket = await _context.Ticket.FindAsync(id);
-
+            var ticket = await _context.Ticket
+                .FirstOrDefaultAsync(m => m.ID == id);
             if (ticket == null)
             {
                 return NotFound();
             }
 
-            return Ok(ticket);
+            return View(ticket);
         }
 
-        // PUT: api/Tickets/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTicket([FromRoute] int id, [FromBody] Ticket ticket)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //// GET: Tickets/Create
+        //public IActionResult Create()
+        //{
+        //    return View();
+        //}
 
+        // POST: Tickets/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("ID,TicketType,Price,isRound,DepartureTimeTo,ArrivalTimeTo,DepartureTimeFrom,ArrivalTimeFrom")] Ticket ticket)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(ticket);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(ticket);
+        }
+
+        //// GET: Tickets/Edit/5
+        //public async Task<IActionResult> Edit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var ticket = await _context.Ticket.FindAsync(id);
+        //    if (ticket == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return View(ticket);
+        //}
+
+        // POST: Tickets/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("ID,TicketType,Price,isRound,DepartureTimeTo,ArrivalTimeTo,DepartureTimeFrom,ArrivalTimeFrom")] Ticket ticket)
+        {
             if (id != ticket.ID)
             {
-                return BadRequest();
-            }
-
-            _context.Entry(ticket).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TicketExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Tickets
-        [HttpPost]
-        public async Task<IActionResult> PostTicket([FromBody] Ticket ticket)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            _context.Ticket.Add(ticket);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetTicket", new { id = ticket.ID }, ticket);
-        }
-
-        // DELETE: api/Tickets/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTicket([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var ticket = await _context.Ticket.FindAsync(id);
-            if (ticket == null)
-            {
                 return NotFound();
             }
 
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(ticket);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TicketExists(ticket.ID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(ticket);
+        }
+
+        //// GET: Tickets/Delete/5
+        //public async Task<IActionResult> Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var ticket = await _context.Ticket
+        //        .FirstOrDefaultAsync(m => m.ID == id);
+        //    if (ticket == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return View(ticket);
+        //}
+
+        // POST: Tickets/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var ticket = await _context.Ticket.FindAsync(id);
             _context.Ticket.Remove(ticket);
             await _context.SaveChangesAsync();
-
-            return Ok(ticket);
+            return RedirectToAction(nameof(Index));
         }
 
         private bool TicketExists(int id)

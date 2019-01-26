@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,14 +9,15 @@ namespace Laptev_Pham_Project.Models
 {
     public class Order
     {
-        public int ID { get; set; }
+        [Key]
+        public int OrderNumber { get; set; }
 
-        public DepartureCity DepartureCityName { get; set; }
+        public float TotalSum { get; set; }
 
-        public ArrivalCity ArrivalCityName { get; set; }
+        public DateTime Date { get; set; }
 
-        public Flight Flight { get; set; }
+        [ForeignKey("ID")]
+        public Customer CustomerId { get; set; }
 
-        public Ticket Ticket { get; set; }
     }
 }

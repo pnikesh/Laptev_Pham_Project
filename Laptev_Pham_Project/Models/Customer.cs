@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,8 +10,11 @@ namespace Laptev_Pham_Project.Models
     {
         public int ID { get; set; }
 
-        public string Name { get; set; }
+        [Column("Name")]
+        public string FullName { get; set; }
 
         public string Email { get; set; }
+
+        
     }
 }

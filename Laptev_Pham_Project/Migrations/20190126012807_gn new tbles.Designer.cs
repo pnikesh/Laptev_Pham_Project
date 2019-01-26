@@ -3,14 +3,16 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Laptev_Pham_Project.Migrations
 {
     [DbContext(typeof(FlightsDBContext))]
-    partial class FlightsDBContextModelSnapshot : ModelSnapshot
+    [Migration("20190126012807_gn new tbles")]
+    partial class gnnewtbles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,7 +41,7 @@ namespace Laptev_Pham_Project.Migrations
 
                     b.Property<string>("Email");
 
-                    b.Property<string>("FullName");
+                    b.Property<string>("Name");
 
                     b.HasKey("ID");
 
@@ -86,19 +88,27 @@ namespace Laptev_Pham_Project.Migrations
 
             modelBuilder.Entity("Laptev_Pham_Project.Models.Order", b =>
                 {
-                    b.Property<int>("OrderNumber")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("Date");
+                    b.Property<int?>("ArrivalCityNameID");
 
-                    b.Property<int?>("ID");
+                    b.Property<int?>("DepartureCityNameID");
 
-                    b.Property<float>("TotalSum");
+                    b.Property<int?>("FlightID");
 
-                    b.HasKey("OrderNumber");
+                    b.Property<int?>("TicketID");
 
-                    b.HasIndex("ID");
+                    b.HasKey("ID");
+
+                    b.HasIndex("ArrivalCityNameID");
+
+                    b.HasIndex("DepartureCityNameID");
+
+                    b.HasIndex("FlightID");
+
+                    b.HasIndex("TicketID");
 
                     b.ToTable("Order");
                 });
@@ -109,41 +119,32 @@ namespace Laptev_Pham_Project.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ArrivalTimeFrom");
-
-                    b.Property<string>("ArrivalTimeTo");
-
-                    b.Property<string>("DepartureTimeFrom");
-
-                    b.Property<string>("DepartureTimeTo");
-
-                    b.Property<int?>("OrderNumber");
-
                     b.Property<int>("Price");
 
                     b.Property<int>("TicketType");
 
-                    b.Property<bool>("isRound");
-
                     b.HasKey("ID");
-
-                    b.HasIndex("OrderNumber");
 
                     b.ToTable("Ticket");
                 });
 
             modelBuilder.Entity("Laptev_Pham_Project.Models.Order", b =>
                 {
-                    b.HasOne("Laptev_Pham_Project.Models.Customer", "CustomerId")
+                    b.HasOne("Laptev_Pham_Project.Models.ArrivalCity", "ArrivalCityName")
                         .WithMany()
-                        .HasForeignKey("ID");
-                });
+                        .HasForeignKey("ArrivalCityNameID");
 
-            modelBuilder.Entity("Laptev_Pham_Project.Models.Ticket", b =>
-                {
-                    b.HasOne("Laptev_Pham_Project.Models.Order", "Order")
+                    b.HasOne("Laptev_Pham_Project.Models.DepartureCity", "DepartureCityName")
                         .WithMany()
-                        .HasForeignKey("OrderNumber");
+                        .HasForeignKey("DepartureCityNameID");
+
+                    b.HasOne("Laptev_Pham_Project.Models.Flight", "Flight")
+                        .WithMany()
+                        .HasForeignKey("FlightID");
+
+                    b.HasOne("Laptev_Pham_Project.Models.Ticket", "Ticket")
+                        .WithMany()
+                        .HasForeignKey("TicketID");
                 });
 #pragma warning restore 612, 618
         }
